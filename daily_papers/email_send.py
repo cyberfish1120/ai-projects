@@ -33,7 +33,7 @@ def format_papers_to_html(papers: list) -> str:
     <body>
         <h2 style="color: #333; margin-bottom: 20px;">今日论文更新</h2>
     """
-    
+    current_time = datetime.now().strftime("%Y%m%d")
     # 添加每篇论文
     for idx, paper in enumerate(papers):
         # 确保所有字段都存在
@@ -50,7 +50,10 @@ def format_papers_to_html(papers: list) -> str:
         
         # 格式化作者列表
         authors_str = ', '.join(authors) if isinstance(authors, list) else authors
-        
+        # 为每个链接创建唯一ID
+        link_id = f"link-{idx}"
+        # 为每个链接创建一个表单，用于POST请求
+        form_id = f"form-{idx}"
         # 添加论文卡片
         html += f"""
         <div class="paper-container">
@@ -62,6 +65,7 @@ def format_papers_to_html(papers: list) -> str:
                     <span style="font-weight: bold;">更新时间:</span> {updated} |
                 </div>
                 <div>pdf链接：<a href="{pdf_link}" target="_blank">{pdf_link}</a></div>
+                <div>加载详情：<a href="http://www.cyberfish.fun:8000/api/?operation=pdf_trans&pdf_link={pdf_link}&date={current_time}" target="_blank">www.cyberfish.fun/papers/{idx}</a></div>
             </div>
             
             <div class="paper-section">
@@ -84,7 +88,7 @@ def format_papers_to_html(papers: list) -> str:
 
 def send_email(
     sender_email: str,
-    receiver_email: str,
+    receiver_emails: list,
     subject: str,
     papers: list,
     smtp_server: str = "smtp.qq.com",
@@ -97,7 +101,7 @@ def send_email(
     
     Args:
         sender_email: 发件人邮箱
-        receiver_email: 收件人邮箱
+        receiver_emails: 收件人邮箱
         subject: 邮件主题
         papers: 论文信息列表
         smtp_server: SMTP服务器地址
@@ -107,8 +111,7 @@ def send_email(
     """
     # 创建邮件对象
     message = MIMEMultipart()
-    message["From"] = Header(sender_email)
-    message["To"] = Header(receiver_email, "utf-8")
+    message["From"] = Header(sender_email)    
     message["Subject"] = Header(subject, "utf-8")
     
     # 格式化论文为HTML
@@ -118,13 +121,15 @@ def send_email(
     message.attach(MIMEText(html_content, "html", "utf-8"))
     
     try:
-        # 连接SMTP服务器
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()  # 启用TLS加密
-        server.login(username or sender_email, password)
-        
-        # 发送邮件
-        server.sendmail(sender_email, receiver_email, message.as_string())
+        for receiver_email in receiver_emails:
+            # 连接SMTP服务器
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()  # 启用TLS加密
+            server.login(username or sender_email, password)
+            
+            # 发送邮件
+            message["To"] = Header(receiver_email, "utf-8")
+            server.sendmail(sender_email, receiver_email, message.as_string())
         print("邮件发送成功")
     except Exception as e:
         print(f"邮件发送失败: {e}")

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36BFFA',
+                        accent: '#7B61FF',
+                        neutral: '#F5F7FA',
+                        dark: '#1D2129'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Georgia', 'serif']
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-flask text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-primary">论文细节</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 标题部分 -->
+        <section class="mb-12 text-center">
+            <h1 class="text-[clamp(1.8rem,5vw,3rem)] font-bold text-dark mb-4 leading-tight text-shadow"><a href="{pdf_link}" target="_blank">{title}</a></h1>
+            <div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </section>
+
+        <!-- 摘要部分 -->
+        <section class="mb-12 bg-white rounded-xl shadow-md p-6 card-hover">
+            <div class="flex items-center mb-4">
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                    <i class="fa fa-file-text-o text-primary"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-dark">摘要</h2>
+            </div>
+            <div class="pl-13 text-gray-700 leading-relaxed">
+                <p>{abstract}</p>
+            </div>
+        </section>
+
+        <!-- 动机部分 -->
+        <section class="mb-12 bg-white rounded-xl shadow-md p-6 card-hover">
+            <div class="flex items-center mb-4">
+                <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center mr-3">
+                    <i class="fa fa-lightbulb-o text-accent"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-dark">动机</h2>
+            </div>
+            <div class="pl-13 text-gray-700 leading-relaxed">
+                <ul class="space-y-2">
+                    {motivation}
+                </ul>
+            </div>
+        </section>
+
+        <!-- 研究方法部分 -->
+        <section class="mb-12 bg-white rounded-xl shadow-md p-6 card-hover">
+            <div class="flex items-center mb-4">
+                <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mr-3">
+                    <i class="fa fa-cogs text-secondary"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-dark">方法</h2>
+            </div>
+            <div class="pl-13 text-gray-700 leading-relaxed">
+                <p>{method}</p>
+            </div>
+        </section>
+
+        <!-- 实验结果部分 -->
+        <section class="mb-12 bg-white rounded-xl shadow-md p-6 card-hover">
+            <div class="flex items-center mb-4">
+                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                    <i class="fa fa-bar-chart text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-dark">结论</h2>
+            </div>
+            <div class="pl-13 text-gray-700 leading-relaxed">
+                <p>{conclusion}</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">论文细节展示页面</p>
+            <p class="text-sm text-gray-400">© Cyberfish 版权所有</p>
+        </div>
+    </footer>
+
+    <!-- 简单的交互效果 -->
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 滚动时导航栏效果
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 10) {
+                header.classList.add('shadow');
+                header.classList.remove('shadow-sm');
+            } else {
+                header.classList.remove('shadow');
+                header.classList.add('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>

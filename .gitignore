@@ -1,0 +1,18 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+tmp/
+web/
+data/mock/
+wheels/
+*.egg-info
+log/
+test/
+paper_data/
+.env
+llab.json
+
+# Virtual environments
+.venv
