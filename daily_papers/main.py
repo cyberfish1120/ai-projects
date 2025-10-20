@@ -59,8 +59,8 @@ while True:
                 with open(f'./paper_data/{current_time}/{paper["id"]}.json', 'w') as fw:
                     json.dump(paper, fw, ensure_ascii=False)
                 output.append({
-                    'title': res['title_cn'],
-                    'abstract': res['abstract_cn'],
+                    'title': paper['标题'],
+                    'abstract': paper['摘要'],
                     'authors': paper['authors'],
                     'published': paper['published'],
                     'updated': paper['updated'],
