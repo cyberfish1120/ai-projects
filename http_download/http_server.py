@@ -3,7 +3,12 @@ import socketserver
 import json
 import os
 from urllib.parse import urlparse, parse_qs
+<<<<<<< HEAD
 from pdf_trans.pdf_trans import paper_analyse
+=======
+from cozepy import COZE_CN_BASE_URL, Coze, TokenAuth
+from pdf_trans.pdf_trans import pdf_trans
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
 from time import sleep
 
 # 定义业务逻辑处理函数
@@ -22,7 +27,11 @@ def process_business_logic(params, parsed_data):
         #     title = '解析错误'
         #     abstract = '解析错误'
         # get请求
+<<<<<<< HEAD
         return paper_analyse(params)
+=======
+        return pdf_trans(params)
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
     else:
         result["status"] = "warning"
         result["message"] = f"未知操作: {operation}，使用默认响应"

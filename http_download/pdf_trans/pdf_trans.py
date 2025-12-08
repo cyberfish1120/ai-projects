@@ -22,8 +22,11 @@ class PaperAnalyse(BaseModel):
 def gemini_pdf_trans(pdf_url):
     with open('http_download/pdf_trans/prompt.txt', encoding='utf8') as fr:
         prompt = fr.read()
+<<<<<<< HEAD
     os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890"
     os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890"
+=======
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
     vertexai.init(project=os.environ.get('g_project'), location=os.environ.get('g_location'))
     credentials = service_account.Credentials.from_service_account_file(
         os.environ.get('g_file'),
@@ -40,11 +43,17 @@ def gemini_pdf_trans(pdf_url):
         response_mime_type="application/json",
         response_schema=PaperAnalyse
     )
+<<<<<<< HEAD
     # Retrieve and encode the PDF byte
     http_response = httpx.get(pdf_url, timeout=60)
     if http_response.status_code == 301:
         http_response = httpx.get(http_response.next_request.url, timeout=60)
     doc_data = http_response.content
+=======
+
+    # Retrieve and encode the PDF byte
+    doc_data = httpx.get(pdf_url).content
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         config=model_config,
@@ -87,15 +96,28 @@ def paper_analyse(params):
     paper_date = params.get('date', [0])[0]
     pdf_url = params.get('pdf_link', [0])[0]
     id = pdf_url.split('/')[-1]
+<<<<<<< HEAD
     with open(f'paper_data/{paper_date}/{id}.json') as fr:
+=======
+    with open(f'/root/每日论文/paper_data/{paper_date}/{id}.json') as fr:
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
         paper_info = json.load(fr)
     title = paper_info['标题']
     abstract = paper_info['摘要']
     if '动机' in paper_info:
+<<<<<<< HEAD
+=======
+        paper_analyse = {
+            '动机': paper_info['motivation'],
+            '方法': paper_info['method'],
+            '结论': paper_info['conclusion'],
+        }
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
         print('直接获取详情')
     else:
         try:
             print('gemini生成中...')
+<<<<<<< HEAD
             paper_info['动机'], paper_info['方法'], paper_info['结论'] = gemini_pdf_trans(pdf_url)
         except Exception as e_gemini:
             print(f'gemini调用接口出错：{e_gemini}，尝试使用扣子解析pdf文档')
@@ -111,13 +133,48 @@ def paper_analyse(params):
             json.dump(paper_info, fw, ensure_ascii=False)
     
     with open('http_download/pdf_trans/index.html', encoding='utf8') as fr:
+=======
+            motivation, method, conclusion = gemini_pdf_trans()
+            paper_analyse = {
+                '动机': motivation,
+                '方法': method,
+                '结论': conclusion,
+            }
+        except Exception as e_gemini:
+            print(f'gemini调用接口出错：{e_gemini}，尝试使用扣子解析pdf文档')
+            try:
+                motivation, method, conclusion = coze_pdf_trans()
+                paper_analyse = {
+                    '动机': motivation,
+                    '方法': method,
+                    '结论': conclusion,
+                }
+            except Exception as e_coze:
+                print(f'coze api token过期或余额不足，请更新！{e_coze}')
+                paper_analyse = {
+                    '动机': 'coze api token过期或余额不足！',
+                    '方法': 'coze api token过期或余额不足！',
+                    '结论': 'coze api token过期或余额不足！',
+                }
+        
+    with open(f'/root/每日论文/paper_data/{paper_date}/{id}.json', 'w') as fw:
+        json.dump(paper_info, fw)
+    
+    with open('/root/http_download/pdf_trans/index.html') as fr:
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
         html_template = fr.read()
     
     html_content = html_template.replace('{title}', title) \
     .replace('{abstract}', abstract) \
+<<<<<<< HEAD
     .replace('{motivation}', paper_info['动机']) \
     .replace('{method}', paper_info['方法']) \
     .replace('{conclusion}', paper_info['结论']) \
+=======
+    .replace('{motivation}', paper_analyse['动机']) \
+    .replace('{method}', paper_analyse['方法']) \
+    .replace('{conclusion}', paper_analyse['结论']) \
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
     .replace('{pdf_link}', pdf_url)
     return html_content
 

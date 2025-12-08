@@ -86,6 +86,7 @@ class ArxivPaperCrawler:
 
     def run(self):
         """运行爬取器"""
+<<<<<<< HEAD
         retry_n = 4
         while retry_n > 0:
             try:
@@ -100,6 +101,19 @@ class ArxivPaperCrawler:
                 retry_n -= 1
                 print(f"爬取过程中发生致命错误({retry_n}): {e}")
         return f"爬取过程中发生错误: {e}"
+=======
+        try:
+            papers = self.get_daily_papers()
+            if papers:
+                print(f"今日爬取完成，共获取 {len(papers)} 篇论文")
+                return papers
+            else:
+                print("今日没有找到符合条件的论文")
+                return '今日没有新发布的论文，休息一下吧~'
+        except Exception as e:
+            print(f"爬取过程中发生致命错误: {e}")
+            return f"爬取过程中发生错误: {e}"
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
 
 if __name__ == '__main__':
     # 设置感兴趣的论文类别

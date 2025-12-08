@@ -20,18 +20,30 @@ categories = [
 # 配置邮件参数
 sender = "2143976877@qq.com"
 receivers = [
+<<<<<<< HEAD
     "3201520786@qq.com", 
+=======
+    # "3201520786@qq.com", 
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
     "1028755879@qq.com"
 ]
 password = "endcdkgcxzavbgca"  # 或应用专用密码
 
 # 创建并运行爬取器
 crawler = ArxivPaperCrawler(categories)
+<<<<<<< HEAD
 
 while True:
     try:
         if datetime.now().hour != 5:
             # print('未到指定发送时间，静默30分钟')
+=======
+max_trans_n = 10
+while True:
+    try:
+        if datetime.now().hour != 15:
+            print('未到指定发送时间，静默30分钟')
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
             time.sleep(1800)
             continue
 
@@ -84,5 +96,10 @@ while True:
         )    
         time.sleep(3600)
     except Exception as e:
+<<<<<<< HEAD
         print(f'ERROR: {e}，120秒后重试！')
         time.sleep(120)
+=======
+        print(f'ERROR: {e}，60秒后重试！')
+        time.sleep(60)
+>>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
