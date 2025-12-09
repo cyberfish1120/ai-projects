@@ -33,11 +33,9 @@ model_config = types.GenerateContentConfig(
 # 采用gemini api翻译标题和摘要
 def trans_gemini(crawed_papers):
     contents = f"title: {crawed_papers['title']}\n\nabstract: {crawed_papers['abstract']}"
-<<<<<<< HEAD
     os.environ['HTTPS_PROXY'] = "http://127.0.0.1:7890"
     os.environ['HTTP_PROXY'] = "http://127.0.0.1:7890"
-=======
->>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
+
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         config=model_config,

@@ -1,5 +1,6 @@
 import json
 import time
+import traceback
 from datetime import datetime
 from papers import ArxivPaperCrawler
 from ai import trans_gemini, trans_doubao
@@ -20,30 +21,18 @@ categories = [
 # 配置邮件参数
 sender = "2143976877@qq.com"
 receivers = [
-<<<<<<< HEAD
     "3201520786@qq.com", 
-=======
-    # "3201520786@qq.com", 
->>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
     "1028755879@qq.com"
 ]
 password = "endcdkgcxzavbgca"  # 或应用专用密码
 
 # 创建并运行爬取器
 crawler = ArxivPaperCrawler(categories)
-<<<<<<< HEAD
 
 while True:
     try:
         if datetime.now().hour != 5:
             # print('未到指定发送时间，静默30分钟')
-=======
-max_trans_n = 10
-while True:
-    try:
-        if datetime.now().hour != 15:
-            print('未到指定发送时间，静默30分钟')
->>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
             time.sleep(1800)
             continue
 
@@ -53,18 +42,23 @@ while True:
             papers = [paper for paper in papers if paper['categories'] in categories]
             
             print(f'符合条件的论文共{len(papers)}篇')
-            # papers = papers[:4]
+            papers = papers[:100]
             current_time = datetime.now().strftime("%Y%m%d")
             os.makedirs(f'./paper_data/{current_time}', exist_ok=True)
             for paper in papers:
-                try: 
-                    res = trans_gemini(paper)
-                except Exception as e:
-                    print(f'gemini翻译出错：{e}\n采用豆包翻译')
-                    try:
-                        res = trans_doubao(paper)
+                max_trans_n = 2
+                while max_trans_n > 0:
+                    try: 
+                        res = trans_gemini(paper)
+                        break
                     except Exception as e:
-                        print(f'豆包翻译出错：{e}')
+                        print(f'gemini翻译出错：{e}\n采用豆包翻译\n{traceback.format_exc()}')
+                        try:
+                            res = trans_doubao(paper)
+                            break
+                        except Exception as e:
+                            print(f'豆包翻译出错：{e}')
+                            max_trans_n -= 1
                     
                 paper['标题'] = res.title_cn
                 paper['摘要'] = res.abstract_cn
@@ -96,10 +90,5 @@ while True:
         )    
         time.sleep(3600)
     except Exception as e:
-<<<<<<< HEAD
         print(f'ERROR: {e}，120秒后重试！')
         time.sleep(120)
-=======
-        print(f'ERROR: {e}，60秒后重试！')
-        time.sleep(60)
->>>>>>> 1a18bb429244b3ffecf54d22cb5d0dba890b7c32
